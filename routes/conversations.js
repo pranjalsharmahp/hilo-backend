@@ -19,4 +19,35 @@ router.get('/inbox', async (req, res) => {
     }
 });
 
+router.post('/' , async (req, res) => {
+    const { user1_email, user2_email,last_message,last_sender_email  } = req.body;
+
+    if (!user1_email || !user2_email || !last_message || !last_sender_email) {
+        return res.status(400).json({ error: 'All fields are required' });
+    }
+    const [email1, email2] = [user1_email, user2_email].sort();
+    try {
+        const result = await pool.query(
+            `
+            INSERT INTO conversations (user1_email, user2_email, last_message, last_sender_email, last_updated)
+            VALUES ($1, $2, $3, $4, NOW())
+            ON CONFLICT (user1_email, user2_email)
+            DO UPDATE SET
+                last_message = EXCLUDED.last_message,
+                last_sender_email = EXCLUDED.last_sender_email,
+                last_updated = NOW()
+            RETURNING *
+            `,
+            [email1, email2, last_message, last_sender_email]
+        );
+        res.status(201).json({
+            message: 'Conversation created successfully',
+            data: result.rows[0]
+        });
+    } catch (error) {
+        console.error('Error creating conversation:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
 module.exports = router;
