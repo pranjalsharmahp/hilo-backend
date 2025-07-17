@@ -60,7 +60,7 @@ app.post('/messages', async (req, res) => {
   }
   try {
     const result = await pool.query(
-      'INSERT INTO messages (sender, receiver, content) VALUES ($1, $2, $3) RETURNING *',
+      'INSERT INTO messages (sender_email, receiver_email, content) VALUES ($1, $2, $3) RETURNING *',
       [sender, receiver, content]
     );
     res.status(201).json({
@@ -80,7 +80,7 @@ app.get('/messages', async (req, res) => {
   }
   try {
     const result = await pool.query(
-      'SELECT * FROM messages WHERE sender = $1 OR receiver = $1',
+      'SELECT * FROM messages WHERE sender_email = $1 OR receiver_email = $1',
       [userEmail]
     );
     res.status(200).json({
