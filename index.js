@@ -6,6 +6,7 @@ const http = require('http');
 const {Server}=require('socket.io');
 const cors = require('cors');
 const bodyParser = require('body-parser');
+const conversationRoutes = require('./routes/conversations');
 
 // 2. Import your database pool and connection test function
 const { pool, testConnection } = require('./db/db');
@@ -70,6 +71,8 @@ io.on('connection', (socket) => {console.log('A user connected:', socket.id);
 app.get('/', (req, res) => {
   res.send('API is working');
 });
+
+app.use('/conversations', conversationRoutes);
 
 // An example route that correctly handles potential database errors
 app.get('/db-test', async (req, res) => {
