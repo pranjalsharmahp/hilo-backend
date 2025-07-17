@@ -106,10 +106,18 @@ app.post('/messages', async (req, res) => {
 });
 
 app.get('/messages/between', async (req, res) => {
+  console.log('🔎 Raw URL:', req.url);
+  console.log('✅ Full query object:', req.query);
+
   const { user1, user2 } = req.query;
+  console.log('📩 user1:', user1);
+  console.log('📩 user2:', user2);
+
   if (!user1 || !user2) {
+    console.error('❌ Missing user1 or user2');
     return res.status(400).json({ error: 'Both user1 and user2 are required' });
   }
+
   try {
     const result = await pool.query(
       'SELECT * FROM messages WHERE (sender_email = $1 AND receiver_email = $2) OR (sender_email = $2 AND receiver_email = $1)',
@@ -124,6 +132,7 @@ app.get('/messages/between', async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
+
 
 app.get('/messages/:userEmail', async (req, res) => {
   const { userEmail } = req.params;
