@@ -74,7 +74,7 @@ app.post('/messages', async (req, res) => {
 });
 
 app.get('/messages', async (req, res) => {
-  const {userEmail}=req.params;
+  const {userEmail}=req.query;
   if (!userEmail) {
     return res.status(400).json({ error: 'User email is required' });
   }
