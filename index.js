@@ -105,6 +105,26 @@ app.post('/messages', async (req, res) => {
   }
 });
 
+app.get('/messages/between', async (req, res) => {
+  const { user1, user2 } = req.query;
+  if (!user1 || !user2) {
+    return res.status(400).json({ error: 'Both user1 and user2 are required' });
+  }
+  try {
+    const result = await pool.query(
+      'SELECT * FROM messages WHERE (sender_email = $1 AND receiver_email = $2) OR (sender_email = $2 AND receiver_email = $1)',
+      [user1, user2]
+    );
+    res.status(200).json({
+      message: 'Messages retrieved successfully',
+      data: result.rows
+    });
+  } catch (err) {
+    console.error('Error executing /messages/between query:', err);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
 app.get('/messages/:userEmail', async (req, res) => {
   const { userEmail } = req.params;
   if (!userEmail) {
