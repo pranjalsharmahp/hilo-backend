@@ -128,13 +128,13 @@ app.get('/messages/:userEmail', async (req, res) => {
 /**
  * Starts the Express server.
  */
-const startServer = () => {
+
   const startServer = () => {
   server.listen(PORT, () => {
     console.log(`🚀 Server + Socket.IO running on port ${PORT}`);
   });
 };
-};
+
 
 
 // 3. Main execution block
