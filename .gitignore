@@ -1,0 +1,27 @@
+# Node modules (never commit these)
+node_modules/
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+
+# Environment variables (very important!)
+.env
+
+# System files
+.DS_Store
+Thumbs.db
+
+# VSCode settings (optional, if using VSCode)
+.vscode/
+
+# Build artifacts (not usually needed for Node)
+dist/
+build/
+
+# Coverage reports (if you're testing)
+coverage/
+
+# Mac or Linux swap files
+*.swp
