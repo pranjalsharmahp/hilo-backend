@@ -53,6 +53,45 @@ app.get('/db-test', async (req, res) => {
   }
 });
 
+app.post('/messages', async (req, res) => {
+  const { sender, receiver, content } = req.body;
+  if (!sender || !receiver || !content) {
+    return res.status(400).json({ error: 'All fields are required' });
+  }
+  try {
+    const result = await pool.query(
+      'INSERT INTO messages (sender, receiver, content) VALUES ($1, $2, $3) RETURNING *',
+      [sender, receiver, content]
+    );
+    res.status(201).json({
+      message: 'Message sent successfully',
+      data: result.rows[0]
+    });
+  } catch (err) {
+    console.error('Error executing /messages query:', err);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+app.get('/messages', async (req, res) => {
+  const {userEmail}=req.params;
+  if (!userEmail) {
+    return res.status(400).json({ error: 'User email is required' });
+  }
+  try {
+    const result = await pool.query(
+      'SELECT * FROM messages WHERE sender = $1 OR receiver = $1',
+      [userEmail]
+    );
+    res.status(200).json({
+      message: 'Messages retrieved successfully',
+      data: result.rows
+    });
+  } catch (err) {
+    console.error('Error executing /messages query:', err);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
 
 /**
  * Starts the Express server.
