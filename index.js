@@ -7,6 +7,7 @@ const {Server}=require('socket.io');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const conversationRoutes = require('./routes/conversations');
+const userRoutes = require('./routes/users');
 
 // 2. Import your database pool and connection test function
 const { pool, testConnection } = require('./db/db');
@@ -73,6 +74,7 @@ app.get('/', (req, res) => {
 });
 
 app.use('/conversations', conversationRoutes);
+app.use('/users', userRoutes);
 
 // An example route that correctly handles potential database errors
 app.get('/db-test', async (req, res) => {
