@@ -22,12 +22,22 @@ const storage = multer.diskStorage({
 });
 
 const fileFilter = (req, file, cb) => {
-  if (/image\/(jpeg|png|gif|jpg|webp)/.test(file.mimetype)) {
+  // Accept if mimetype is an allowed image type
+  if (/^image\/(jpeg|png|gif|webp)$/.test(file.mimetype)) {
     cb(null, true);
-  } else {
-    cb(new Error('Only image uploads allowed'), false);
+    return;
   }
+
+  // IF the mimetype isn't standard, check the file extension
+  const ext = path.extname(file.originalname).toLowerCase();
+  if (ext === '.jpg' || ext === '.jpeg' || ext === '.png' || ext === '.gif' || ext === '.webp') {
+    cb(null, true);
+    return;
+  }
+
+  cb(new Error('Only image uploads allowed'), false);
 };
+
 
 const upload = multer({
   storage,
