@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const { pool } = require('../db/db');
 const upload = require('../utils/multer');
-const { uploadToCloudinary } = require('./utils/cloudinary');
+const { uploadToCloudinary } = require('../utils/cloudinary');
 
 
 router.post('/register-user', async (req, res) => {
