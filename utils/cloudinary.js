@@ -1,11 +1,10 @@
 const cloudinary = require('cloudinary').v2;
 const fs = require('fs').promises; 
-const {env} = require("../lib/env")
 
 cloudinary.config({
-  cloud_name: env.CLOUDINARY.CLOUD_NAME,
-  api_key: env.CLOUDINARY.API_KEY,
-  api_secret: env.CLOUDINARY.API_SECRET
+  cloud_name: process.env.CLOUDINARY_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET
 });
 
 async function uploadToCloudinary(filePath, folder = 'uploads') {
