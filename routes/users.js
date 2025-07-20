@@ -15,7 +15,7 @@ router.post('/register-user', async (req, res) => {
     // Try inserting user
     await pool.query(
       'INSERT INTO users (email, name, profile_url) VALUES ($1, $2, $3)',
-      [email, name, profile_url || null]
+      [email, name, profile_url]
     );
     res.status(201).json({ message: 'User registered successfully' });
   } catch (error) {
