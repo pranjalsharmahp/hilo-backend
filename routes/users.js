@@ -4,7 +4,6 @@ const { pool } = require('../db/db');
 const upload = require('../utils/multer');
 const { uploadToCloudinary } = require('../utils/cloudinary');
 
-
 router.post('/register-user', async (req, res) => {
   const { email, name, profile_url } = req.body;
 
