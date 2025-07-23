@@ -49,6 +49,19 @@ io.on('connection', (socket) => {console.log('A user connected:', socket.id);
     socket.join(email);
     console.log(`User with email ${email} joined room`);
   });
+  socket.on('messageSeen',async (messageData)=>{
+    const {userEmail,otherUserEmail}=messageData;
+    try{
+      await pool.query(
+  `UPDATE messages
+   SET seen = TRUE
+   WHERE sender_email = $1 AND receiver_email = $2 AND is_seen = FALSE`,
+  [otherUserEmail, userEmail]
+);
+io.to(messageData.otherUserEmail).emit('markedAsSeen', messageData);
+    }
+    catch(e){}
+  })
 
   socket.on('sendMessage', async (messageData) => {
     const {sender_email, receiver_email,content} = messageData;
