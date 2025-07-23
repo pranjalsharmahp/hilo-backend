@@ -52,12 +52,26 @@ io.on('connection', (socket) => {console.log('A user connected:', socket.id);
 
   socket.on('sendMessage', async (messageData) => {
     const {sender_email, receiver_email,content} = messageData;
+    const [user1, user2] = [sender_email, receiver_email].sort();
     try{
       await pool.query(
         'INSERT INTO messages (sender_email, receiver_email, content) VALUES ($1, $2, $3)',
         [sender_email, receiver_email, content]
       );
-      await pool.query('INSERT INTO conversations (user1_email,user2_email,last_message,last_sender_email) VALUES ($1,$2,$3,$1)',[sender_email,receiver_email,content]);
+      const result = await pool.query(
+            `
+            INSERT INTO conversations (user1_email, user2_email, last_message, last_sender_email, last_updated)
+            VALUES ($1, $2, $3, $4, NOW())
+            ON CONFLICT (user1_email, user2_email)
+            DO UPDATE SET
+                last_message = EXCLUDED.last_message,
+                last_sender_email = EXCLUDED.last_sender_email,
+                last_updated = NOW()
+            RETURNING *
+            `,
+            [user1, user2, content, sender_email]
+        ); 
+             
       io.to(receiver_email).emit('messageReceived', messageData);
       console.log(`Message sent from ${sender_email} to ${receiver_email}`);
     } catch (error) {
