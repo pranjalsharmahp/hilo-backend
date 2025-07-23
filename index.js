@@ -57,7 +57,7 @@ io.on('connection', (socket) => {console.log('A user connected:', socket.id);
         'INSERT INTO messages (sender_email, receiver_email, content) VALUES ($1, $2, $3)',
         [sender_email, receiver_email, content]
       );
-      await pool.query('INSERT INTO conversations (user1_email,user2_email,last_message,last_sender_email) VALUE ($1,$2,$3,$1)',[sender_email,receiver_email,content]);
+      await pool.query('INSERT INTO conversations (user1_email,user2_email,last_message,last_sender_email) VALUES ($1,$2,$3,$1)',[sender_email,receiver_email,content]);
       io.to(receiver_email).emit('messageReceived', messageData);
       console.log(`Message sent from ${sender_email} to ${receiver_email}`);
     } catch (error) {
