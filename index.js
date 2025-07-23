@@ -64,12 +64,12 @@ io.to(messageData.otherUserEmail).emit('markedAsSeen', messageData);
   })
 
   socket.on('sendMessage', async (messageData) => {
-    const {sender_email, receiver_email,content} = messageData;
+    const {sender_email, receiver_email,content,message_id} = messageData;
     const [user1, user2] = [sender_email, receiver_email].sort();
     try{
       await pool.query(
-        'INSERT INTO messages (sender_email, receiver_email, content) VALUES ($1, $2, $3)',
-        [sender_email, receiver_email, content]
+        'INSERT INTO messages (sender_email, receiver_email, content,message_id) VALUES ($1, $2, $3,$4)',
+        [sender_email, receiver_email, content,message_id]
       );
       const result = await pool.query(
             `
