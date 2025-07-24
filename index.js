@@ -54,7 +54,7 @@ io.on('connection', (socket) => {console.log('A user connected:', socket.id);
     try{
       await pool.query(
   `UPDATE messages
-   SET seen = TRUE
+   SET is_seen = TRUE
    WHERE sender_email = $1 AND receiver_email = $2 AND is_seen = FALSE`,
   [otherUserEmail, userEmail]
 );
